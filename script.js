@@ -3,6 +3,9 @@ const button = document.getElementById("addBtn")
 const taskList = document.getElementById("taskList")
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+const totalTasks = document.getElementById("totalTasks")
+const completedTasks = document.getElementById("completedTasks")
+const pendingTasks = document.getElementById("pendingTasks")
 
 //carregar tarefas ao abrir a página
 window.onload = () => {
@@ -14,9 +17,15 @@ window.onload = () => {
             createTask(task)
         })
     }
+    updateCounter()
 }
 
 button.addEventListener("click", addTask)
+input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        addTask()
+    }
+})
 
 function addTask() {
 
@@ -35,6 +44,8 @@ function addTask() {
 
     tasks.push(task)
     localStorage.setItem("tasks", JSON.stringify(tasks))
+
+    updateCounter()
 
     createTask(task)
 
@@ -64,6 +75,7 @@ function addTask() {
             return t
         })
         localStorage.setItem("tasks", JSON.stringify(tasks))
+        updateCounter()
     })
 
     const deleteBtn = li.querySelector(".deleteBtn")
@@ -75,7 +87,19 @@ deleteBtn.addEventListener("click", (e) => {
     //remove do array pelo ID (CORRETO)
     tasks = tasks.filter(t => t.id !== task.id)
     localStorage.setItem("tasks", JSON.stringify(tasks))
+
+    updateCounter()
 })
 
     taskList.appendChild(li)
+}
+
+function updateCounter() {
+    const total = tasks.length
+    const completed = tasks.filter(task => task.completed).length
+    const pending = total - completed
+
+    totalTasks.textContent = total
+    completedTasks.textContent = completed
+    pendingTasks.textContent = pending
 }
