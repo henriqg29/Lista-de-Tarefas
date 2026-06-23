@@ -87,6 +87,7 @@ li:hover{
     display: flex;
     gap: 10px;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 .stat-card{
     flex: 1;
@@ -109,4 +110,12 @@ li:hover{
     margin-top: 5px;
     color: #666;
     font-size: 13px;
+}
+#cleaerCompletedBtn{
+    width: 100%;
+    margin-top: 20px;
+    background: #ff4d4d;
+}
+#clearCompletedBtn:hover{
+    background: #e60000;
 }

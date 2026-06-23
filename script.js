@@ -6,6 +6,7 @@ let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 const totalTasks = document.getElementById("totalTasks")
 const completedTasks = document.getElementById("completedTasks")
 const pendingTasks = document.getElementById("pendingTasks")
+const clearCompletedBtn = document.getElementById("clearCompletedBtn")
 
 //carregar tarefas ao abrir a página
 window.onload = () => {
@@ -26,6 +27,8 @@ input.addEventListener("keydown", (e) => {
         addTask()
     }
 })
+
+clearCompletedBtn.addEventListener("click",clearCompleted)
 
 function addTask() {
 
@@ -53,12 +56,30 @@ function addTask() {
 }
 
     function createTask(task){
+        
     const li = document.createElement("li")
 
         li.innerHTML = `
         ${task.text}
         <button class="deleteBtn">Excluir</button>
     `
+        li.addEventListener("dblclick", () => {
+        const novoTexto = prompt("Editar tarefa:", task.text)
+        if(novoTexto === null || novoTexto.trim() === ""){
+            return
+        }
+        task.text = novoTexto.trim()
+
+        tasks = tasks.map(t => {
+            if(t.id === task.id){
+                return task
+            }
+            return t
+        })
+        localStorage.setItem("tasks", JSON.stringify(tasks))
+        li.childNodes[0].textContent = `${task.text}`
+    })
+    
     //se já estiver concluída, aplica visual
     if(task.completed){
         li.classList.add("completed")
@@ -102,4 +123,14 @@ function updateCounter() {
     totalTasks.textContent = total
     completedTasks.textContent = completed
     pendingTasks.textContent = pending
+}
+
+function clearCompleted(){
+    tasks = tasks.filter(task => !task.completed)
+    localStorage.setItem("tasks", JSON.stringify(tasks))
+    taskList.innerHTML = ""
+    tasks.forEach(task => {
+        createTask(task)
+    })
+    updateCounter()
 }
